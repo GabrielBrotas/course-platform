@@ -15,6 +15,12 @@
 
 ## Features
 - users
-    [X] user should be able to login
-    [X] user should be able to register
-    [ ] user should receive an email when register
+  - [X] user should be able to login
+  - [X] user should be able to register
+  - [ ] user should receive an email when register
+  - [ ] user should be able to enroll in a course
+  - [ ] user should receive an email when enroll in a course
+
+- courses
+  - [ ] an administrator should be able to create a course
+  - [ ]

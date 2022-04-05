@@ -8,13 +8,14 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "./src",
+    "baseUrl": ".",
+    "lib": ["es6", "dom"],
+    "types": ["reflect-metadata"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
-      "@src/*": ["src/*"],
-    },
-    "rootDirs": [
-      "src"
-    ]
+      "@src/*": ["./src/*"],
+    }
   },
   "include": [
     "src/**/*.ts",
