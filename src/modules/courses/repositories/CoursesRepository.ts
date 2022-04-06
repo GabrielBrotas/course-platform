@@ -1,34 +1,67 @@
 import { injectable } from "inversify";
 import { prisma } from '@src/shared/services/prisma'
-import { ICreateStudentDTO, IStudentsRepository } from './ICoursesRepository'
-import { IStudent } from '../entities'
+import { ICreateCourseDTO, ICoursesRepository, IAddUserToCourseDTO } from './ICoursesRepository'
+import { ICourse } from '../schemas/course'
 
 @injectable()
-export class StudentsRepository implements IStudentsRepository {
+export class CoursesRepository implements ICoursesRepository {
 
-  async findById(id: number): Promise<IStudent | null> {
-    return await prisma.student.findUnique({
+  async findAll(): Promise<ICourse[]> {
+    return await prisma.course.findMany({
+      include: {
+        students: true
+      }
+    })
+  }
+
+  async findById(id: number): Promise<ICourse | null> {
+    return await prisma.course.findUnique({
       where: {
         id
+      },
+      include: {
+        students: true
       }
     })
   }
 
-  async findByEmail(email: string): Promise<IStudent | null> {
-    return await prisma.student.findUnique({
+  async findByName(name: string): Promise<ICourse | null> {
+    return await prisma.course.findFirst({
       where: {
-        email
+        name
+      },
+      include: {
+        students: true
       }
     })
   }
 
-  async create(data: ICreateStudentDTO): Promise<IStudent> {
-    return await prisma.student.create({
+  async create(data: ICreateCourseDTO): Promise<ICourse> {
+    return await prisma.course.create({
       data: {
-        ...data,
-        roles: ['student']
+        ...data
+      },
+      include: {
+        students: true
       }
     })
+  }
+
+  async addUserToCourse({courseId, userId}: IAddUserToCourseDTO): Promise<boolean> {
+    await prisma.course.update({
+      where: {
+        id: courseId
+      },
+      data: {
+        students: {
+          connect: {
+            id: userId
+          }
+        }
+      }
+    })
+
+    return true
   }
 }
 

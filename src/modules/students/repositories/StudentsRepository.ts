@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { prisma } from '@src/shared/services/prisma'
 import { ICreateStudentDTO, IStudentsRepository } from './IStudentsRepository'
-import { IStudent } from '../entities'
+import { IStudent } from "../schemas/student";
 
 @injectable()
 export class StudentsRepository implements IStudentsRepository {
@@ -30,5 +30,6 @@ export class StudentsRepository implements IStudentsRepository {
       }
     })
   }
+
 }
 

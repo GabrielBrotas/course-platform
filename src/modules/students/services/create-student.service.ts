@@ -1,8 +1,8 @@
 import { injectable, inject } from "inversify";
-import { IStudent } from '../entities';
 import { ICreateStudentDTO } from '../repositories/IStudentsRepository';
 import { StudentsRepository } from '../repositories/StudentsRepository';
 import { HashProvider } from "@src/shared/containers/providers/HashProvider/HashProvider";
+import { IStudentOut, StudentOut } from "../schemas/student";
 
 @injectable()
 export class CreateStudentService {
@@ -12,7 +12,7 @@ export class CreateStudentService {
     @inject(StudentsRepository) private studentsRepository: StudentsRepository
   ) {}
 
-  public async execute({email, name, password}: ICreateStudentDTO): Promise<Partial<IStudent>> {
+  public async execute({email, name, password}: ICreateStudentDTO): Promise<IStudentOut> {
     try {
       const emailAlreadyExists = await this.studentsRepository.findByEmail(email)
 
@@ -26,7 +26,7 @@ export class CreateStudentService {
         password: newPassword
       });
 
-      return student
+      return StudentOut.format(student)
     } catch(error: any) {
       console.log(error)
       throw String(error.message)

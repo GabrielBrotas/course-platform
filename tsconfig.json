@@ -14,10 +14,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
-      "@src/*": ["./src/*"],
-    }
+      "@src/*": ["./src/*"]
+    },
+    "strictPropertyInitialization": false,
+    "allowJs": true
   },
   "include": [
-    "src/**/*.ts",
+    "**/*",
+    "**/*.prisma"
   ]
 }

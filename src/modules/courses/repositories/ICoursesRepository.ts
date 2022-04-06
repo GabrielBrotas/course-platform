@@ -1,13 +1,18 @@
-import { IStudent } from '../entities';
+import { ICourse } from '../schemas/course';
 
-export type ICreateStudentDTO = {
+export type ICreateCourseDTO = {
   name: string;
-  email: string;
-  password: string;
 }
 
-export interface IStudentsRepository {
-  findById(id: number): Promise<IStudent | null>;
-  findByEmail(email: string): Promise<IStudent | null>;
-  create(user: ICreateStudentDTO): Promise<IStudent>;
+export type IAddUserToCourseDTO = {
+  userId: number;
+  courseId: number;
+}
+
+export interface ICoursesRepository {
+  findAll(): Promise<ICourse[]>;
+  findById(id: number): Promise<ICourse | null>;
+  findByName(name: string): Promise<ICourse | null>;
+  create(user: ICreateCourseDTO): Promise<ICourse>;
+  addUserToCourse(data: IAddUserToCourseDTO): Promise<boolean>;
 }

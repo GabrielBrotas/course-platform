@@ -6,26 +6,37 @@ interface ITokenPayload {
   id: number,
   email: string,
   roles: string[],
+  isAdmin: boolean
 }
 
-export default function ensureAuth(request: Request, response: Response, next: NextFunction) {
-  try {
-    const jwtToken = request.headers.authorization;
 
-    if (!jwtToken) throw 'JWT token is missing';
+export const ensureAuth = (roles: string[] = []) => {
+  return (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const jwtToken = request.headers.authorization;
 
-    const [, token] = jwtToken.split('Bearer ');
+      if (!jwtToken) throw 'JWT token is missing';
 
-    const decoded = jwt.verify(token, JWT_SECRET) as ITokenPayload;
+      const [, token] = jwtToken.split('Bearer ');
 
-    request.user = {
-      id: decoded.id,
-      email: decoded.email,
-      roles: decoded.roles,
-    };
+      const decoded = jwt.verify(token, JWT_SECRET) as ITokenPayload;
 
-    return next();
-} catch (err) {
-    return response.status(403).send(err)
-}
+      if(
+        roles.length > 0 && 
+        !decoded.roles.some(role => roles.includes(role))
+      ) throw `User does not have ${roles.join(', ')} permission`
+      
+      request.user = {
+        id: decoded.id,
+        email: decoded.email,
+        roles: decoded.roles,
+        isAdmin: decoded.isAdmin,
+      };
+
+      return next();
+    } catch (err) {
+        return response.status(403).send(err)
+    }
+} 
+
 }

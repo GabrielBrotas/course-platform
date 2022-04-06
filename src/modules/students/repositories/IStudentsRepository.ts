@@ -1,4 +1,4 @@
-import { IStudent } from '../entities';
+import { IStudent } from "../schemas/student";
 
 export type ICreateStudentDTO = {
   name: string;

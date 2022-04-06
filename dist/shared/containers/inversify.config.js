@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.container = void 0;
+const AdminsRepository_1 = require("../../modules/auth/repositories/AdminsRepository");
+const CoursesRepository_1 = require("../../modules/courses/repositories/CoursesRepository");
+const StudentsRepository_1 = require("../../modules/students/repositories/StudentsRepository");
+const inversify_1 = require("inversify");
+const HashProvider_1 = require("./providers/HashProvider/HashProvider");
+const container = new inversify_1.Container();
+exports.container = container;
+container.bind(HashProvider_1.HashProvider).toSelf();
+container.bind(StudentsRepository_1.StudentsRepository).toSelf();
+container.bind(AdminsRepository_1.AdminsRepository).toSelf();
+container.bind(CoursesRepository_1.CoursesRepository).toSelf();
