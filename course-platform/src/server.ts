@@ -9,6 +9,10 @@ const app = express();
 
 app.use(express.json());
 
+app.get('/health-check', (req, res) => {
+  return res.status(200).json({ success: true })
+})
+
 app.use('/auth', authRouter);
 app.use('/students', studentsRouter);
 app.use('/courses', coursesRouter);
