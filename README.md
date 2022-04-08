@@ -45,10 +45,8 @@
   npm run build
   echo $'DATABASE_URL=postgresql://postgres:postgres123@course-platform.c9pacmppdwgk.us-east-1.rds.amazonaws.com:5432/courseplatform' > .env
   npx prisma migrate deploy --schema="./dist/shared/services/prisma/schema.prisma"
-
-  # init using container
-  docker build -t course-platform:latest .
-  docker container run -d -p 4000:4000 course-platform:latest
+  npx prisma generate --schema="./dist/shared/services/prisma/schema.prisma"
+  node dist/server.js
 ```
 
 ## Clean up
@@ -67,3 +65,14 @@
 - courses
   - [X] an administrator should be able to create a course
 
+
+## Topics
+ - Microservices communication (Kafka)
+ - Authentication (JWT)
+ - Queue's (BullJS)
+ - Email Notification
+ - CI/CD (Github Actions)
+ - Self Hosted Agent (Private EC2)
+ - Cloud Database (RDS - Postgres)
+ - Cloud Infrastructure (AWS)
+ - 
