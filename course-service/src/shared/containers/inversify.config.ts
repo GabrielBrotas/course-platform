@@ -9,9 +9,13 @@ import { Container } from "inversify";
 import { HashProvider } from "./providers/HashProvider/HashProvider";
 import { IHashProvider } from './providers/HashProvider/IHashProvider'
 
+import { LoggerProvider } from "./providers/LoggerProvider/LoggerProvider";
+import { ILoggerProvider } from './providers/LoggerProvider/ILoggerProvider'
+
 const container = new Container();
 
 container.bind<IHashProvider>(HashProvider).toSelf();
+container.bind<ILoggerProvider>(LoggerProvider).toSelf();
 
 container.bind<IStudentsRepository>(StudentsRepository).toSelf();
 container.bind<IAdminsRepository>(AdminsRepository).toSelf();

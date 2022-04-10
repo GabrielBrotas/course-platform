@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-import { JWT_SECRET } from "@src/config/constants";
+import constants from "@src/config/constants";
 import jwt from 'jsonwebtoken'
 
 interface ITokenPayload {
@@ -19,7 +19,7 @@ export const ensureAuth = (roles: string[] = []) => {
 
       const [, token] = jwtToken.split('Bearer ');
 
-      const decoded = jwt.verify(token, JWT_SECRET) as ITokenPayload;
+      const decoded = jwt.verify(token, constants.JWT_SECRET) as ITokenPayload;
 
       if(
         roles.length > 0 && 

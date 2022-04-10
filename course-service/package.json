@@ -1,26 +1,44 @@
 {
   "name": "nodejs-dependency-inversion",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dependency injection / microservices app testing",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev -r tsconfig-paths/register --ignore-watch node_modules --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --ignore-watch node_modules --respawn --transpile-only src/server.ts | pino-pretty",
     "build": "npm run build:clean && npm run build:compile && npm run build:copy-files",
     "build:clean": "rimraf dist/",
     "build:copy-files": "copyfiles -u 1 src/**/*.prisma src/**/*.sql src/**/*.toml dist/",
     "build:compile": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Gabriel Brotas",
+  "homepage": "https://github.com/LcsK/melhorando-logs-do-nodejs-com-typescript-pinojs-logdna-2021-09-13#readme",
   "license": "ISC",
+  "engines": {
+    "node": "17.8.0",
+    "npm": "8.5.5"
+  },
+  "keywords": [
+    "logs",
+    "domain driven design",
+    "inversify",
+    "dependency injection",
+    "microservice",
+    "typescript"
+  ],
+  "repository": {
+    "type": "https",
+    "url": "https://github.com/GabrielBrotas/course-platform"
+  },
   "dependencies": {
     "@prisma/client": "^3.11.1",
+    "amqplib": "^0.8.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "inversify": "^6.0.1",
     "jsonwebtoken": "^8.5.1",
+    "pino": "^7.10.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
@@ -37,6 +55,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "pino-pretty": "^7.6.1",
     "prettier": "^2.6.2",
     "prisma": "^3.11.1",
     "rimraf": "^3.0.2",

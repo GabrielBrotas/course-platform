@@ -1,13 +1,10 @@
-FROM node:16-alpine3.15
+FROM node:17.8.0
 
-# USER node
-
-WORKDIR /home/node/app
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 
 RUN npm install
-
 COPY . .
 
 RUN npm run build

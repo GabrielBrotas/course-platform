@@ -7,7 +7,7 @@
   docker-compuse up -d
 
   npx prisma migrate dev --name init --schema="./src/shared/services/prisma/schema.prisma"
-  npx prisma generate # it will update the sdk with your schema
+  npx prisma generate --schema="./src/shared/services/prisma/schema.prisma" # it will update the sdk with your schema
 
   # init locally
   yarn dev
@@ -58,12 +58,18 @@
 - students
   - [X] student should be able to login
   - [X] student should be able to register
-  - [ ] student should receive an email when register
   - [X] student should be able to enroll in a course
   - [ ] student should receive an email when enroll in a course
+  - [ ] student should receive an email when register
 
 - courses
   - [X] an administrator should be able to create a course
+
+- TODO:
+  - Transform every microservice in a container
+  - Create terraform to deploy services and infrastructure
+  - Monitoring logs (observability)
+  - One Authentication to all api's?
 
 
 ## Topics

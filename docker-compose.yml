@@ -1,28 +1,46 @@
-version: '3.1'
+version: '3.2'
 
 services:
-  db:
-    image: postgres:14.2
+  course-svc-postgres:
+    container_name: course-svc-postgres
+    image: postgres:14.2-alpine
     restart: always
-    container_name: cp-postgres
     ports:
       - '5432:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=courseplatform
+      - POSTGRES_DB=course-svc
 
-  # course_platform:
-  #   build: ./course-platform
-  #   container_name: course-platform-api
+#   rabbitmq:
+#     image: rabbitmq:3-management-alpine
+#     container_name: 'rabbitmq'
+#     ports:
+#       - 5672:5672
+#       - 15672:15672
+#     volumes:
+#       - $PWD/rabbitmq/data/:/var/lib/rabbitmq/
+#       - $PWD/rabbitmq/log/:/var/log/rabbitmq
+#     networks: 
+#       - rabbitmq_go_net
+  
+# networks:
+#   rabbitmq_go_net:
+#     driver: bridge
+  # course_svc:
+  #   build: ./course-service
+  #   container_name: course-svc
   #   ports:
   #     - 4000:4000
   #   volumes:
   #     - .:/home/node/app
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal/course-svc
+  #     - JWT_SECRET=secret
   #   depends_on:
-  #     - db
-
-
+  #     - course-svc-postgres
+  #   links:
+  #     - course-svc-postgres
 
   # email_microservice:
   #   build: ./email-microservice
