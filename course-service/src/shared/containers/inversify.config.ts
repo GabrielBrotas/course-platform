@@ -11,11 +11,14 @@ import { IHashProvider } from './providers/HashProvider/IHashProvider'
 
 import { LoggerProvider } from "./providers/LoggerProvider/LoggerProvider";
 import { ILoggerProvider } from './providers/LoggerProvider/ILoggerProvider'
+import { ICacheProvider } from "./providers/CacheProvider/ICacheProvider";
+import { CacheProvider } from "./providers/CacheProvider/CacheProvider";
 
 const container = new Container();
 
-container.bind<IHashProvider>(HashProvider).toSelf();
-container.bind<ILoggerProvider>(LoggerProvider).toSelf();
+container.bind<IHashProvider>(HashProvider).toSelf().inSingletonScope();
+container.bind<ILoggerProvider>(LoggerProvider).toSelf().inSingletonScope();
+container.bind<ICacheProvider>(CacheProvider).toSelf().inSingletonScope();
 
 container.bind<IStudentsRepository>(StudentsRepository).toSelf();
 container.bind<IAdminsRepository>(AdminsRepository).toSelf();

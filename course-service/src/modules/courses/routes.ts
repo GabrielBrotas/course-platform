@@ -14,7 +14,7 @@ coursesRouter.get('/', async (request: Request, response: Response) => {
 
     const courses = await getAllCourseService.execute();
 
-    return response.status(200).json(courses);
+    return response.status(200).json({courses});
   } catch (error) {
     console.log(error)
     return response.status(400).json({ error });

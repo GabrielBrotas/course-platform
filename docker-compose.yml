@@ -12,21 +12,36 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=course-svc
 
-#   rabbitmq:
-#     image: rabbitmq:3-management-alpine
-#     container_name: 'rabbitmq'
-#     ports:
-#       - 5672:5672
-#       - 15672:15672
-#     volumes:
-#       - $PWD/rabbitmq/data/:/var/lib/rabbitmq/
-#       - $PWD/rabbitmq/log/:/var/log/rabbitmq
-#     networks: 
-#       - rabbitmq_go_net
+  redis:
+    image: redis
+    container_name: course-svc-redis
+    command: redis-server --requirepass redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks: 
+      - rabbitmq_go_net
+
+  # email_microservice:
+  #   build: ./email-microservice
+  #   container_name: email-microservice
+  #   restart: always
+  #   tty: true
+  #   volumes:
+  #     - .:/home/node/app 
   
-# networks:
-#   rabbitmq_go_net:
-#     driver: bridge
+networks:
+  rabbitmq_go_net:
+    driver: bridge
   # course_svc:
   #   build: ./course-service
   #   container_name: course-svc
@@ -42,10 +57,3 @@ services:
   #   links:
   #     - course-svc-postgres
 
-  # email_microservice:
-  #   build: ./email-microservice
-  #   container_name: email-microservice
-  #   restart: always
-  #   tty: true
-  #   volumes:
-  #     - .:/home/node/app 
