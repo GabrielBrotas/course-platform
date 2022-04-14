@@ -1,15 +1,17 @@
 import { injectable, inject } from "inversify";
 import { ICreateStudentDTO } from '../repositories/IStudentsRepository';
 import { StudentsRepository } from '../repositories/StudentsRepository';
-import { HashProvider } from "@src/shared/containers/providers/HashProvider/HashProvider";
 import { IStudentOut, StudentOut } from "../schemas/student";
+import { HashProvider } from "@src/shared/containers/providers/HashProvider/HashProvider";
+import { QueueProvider } from "@src/shared/containers/providers/QueueProvider/QueueProvider";
 
 @injectable()
 export class CreateStudentService {
 
   constructor(
     @inject(HashProvider) private hashProvider: HashProvider,
-    @inject(StudentsRepository) private studentsRepository: StudentsRepository
+    @inject(StudentsRepository) private studentsRepository: StudentsRepository,
+    @inject(QueueProvider) private queueProvider: QueueProvider
   ) {}
 
   public async execute({email, name, password}: ICreateStudentDTO): Promise<IStudentOut> {
@@ -25,6 +27,15 @@ export class CreateStudentService {
         name,
         password: newPassword
       });
+
+      this.queueProvider.sendMessage({
+        queue_name: 'email-svc',
+        message: JSON.stringify({
+          type: 'new-user',
+          email,
+          name,
+        })
+      })
 
       return StudentOut.format(student)
     } catch(error: any) {

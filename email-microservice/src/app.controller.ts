@@ -1,24 +1,17 @@
+import { MessagePattern, Payload, Ctx, RmqContext } from '@nestjs/microservices';
 import { Controller, Get } from '@nestjs/common';
-// import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AppService } from './app.service';
-import { MailService } from './mail/mail.service';
 
 @Controller()
 export class AppController {
   constructor(
-    private readonly mailService: MailService,
+    private readonly appService: AppService
   ) {}
 
-  // @MessagePattern('email-svc')
-  // sendEmail(@Payload() message) {
-  //   console.log('Message Received', message);
-  // }
-
-  @Get('/')
-  async sendEmail() {
-    await this.mailService.sendWelcomeToNewUser({
-      name: "Joao",
-      email: "someemail@gmail.com"
-    });
+  @MessagePattern()
+  sendEmail(@Ctx() context: RmqContext) {
+    const message = context.getMessage().content.toString()
+    return this.appService.sendEmail(JSON.parse(message))
   }
 }
+ 

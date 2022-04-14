@@ -43,6 +43,7 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.8.2",
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.8",

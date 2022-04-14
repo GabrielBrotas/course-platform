@@ -5,7 +5,7 @@ import constants from '@src/config/constants';
 
 const pinoLogger = pino({
 	level: constants.LOG_LEVEL,
-});
+})
 
 const parseLoggerInputToPinoFormat = <T> ({ message, error, ...data }: LogData<T>) => ({
 	msg: message,
