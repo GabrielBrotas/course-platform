@@ -16,10 +16,12 @@ exports.EnrollCourseService = void 0;
 const inversify_1 = require("inversify");
 const CoursesRepository_1 = require("../repositories/CoursesRepository");
 const StudentsRepository_1 = require("../../students/repositories/StudentsRepository");
+const QueueProvider_1 = require("../../../shared/containers/providers/QueueProvider/QueueProvider");
 let EnrollCourseService = class EnrollCourseService {
-    constructor(coursesRepository, studentsRepository) {
+    constructor(coursesRepository, studentsRepository, queueProvider) {
         this.coursesRepository = coursesRepository;
         this.studentsRepository = studentsRepository;
+        this.queueProvider = queueProvider;
     }
     async execute({ userId, courseId }) {
         try {
@@ -30,6 +32,15 @@ let EnrollCourseService = class EnrollCourseService {
             if (!course)
                 throw new Error("Course not found");
             await this.coursesRepository.addUserToCourse({ courseId, userId });
+            this.queueProvider.sendMessage({
+                queue_name: 'email-svc',
+                message: JSON.stringify({
+                    type: 'enroll-course',
+                    email: user.email,
+                    name: user.name,
+                    course_name: course.name,
+                })
+            });
         }
         catch (error) {
             console.log(error);
@@ -41,7 +52,9 @@ EnrollCourseService = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(CoursesRepository_1.CoursesRepository)),
     __param(1, (0, inversify_1.inject)(StudentsRepository_1.StudentsRepository)),
+    __param(2, (0, inversify_1.inject)(QueueProvider_1.QueueProvider)),
     __metadata("design:paramtypes", [CoursesRepository_1.CoursesRepository,
-        StudentsRepository_1.StudentsRepository])
+        StudentsRepository_1.StudentsRepository,
+        QueueProvider_1.QueueProvider])
 ], EnrollCourseService);
 exports.EnrollCourseService = EnrollCourseService;

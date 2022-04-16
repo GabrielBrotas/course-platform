@@ -4,9 +4,9 @@ RUN apk add --no-cache bash
 
 RUN npm i -g @nestjs/cli@7.4.1
 
-USER node
+# USER node
 
-WORKDIR /home/node/app
+WORKDIR /email-template
 
 COPY package*.json ./
 
@@ -14,4 +14,4 @@ COPY . .
 
 RUN npm install
 
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]

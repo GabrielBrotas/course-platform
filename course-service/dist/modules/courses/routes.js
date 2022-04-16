@@ -13,7 +13,7 @@ coursesRouter.get('/', async (request, response) => {
     try {
         const getAllCourseService = inversify_config_1.container.resolve(get_all_course_service_1.GetAllCourseService);
         const courses = await getAllCourseService.execute();
-        return response.status(200).json(courses);
+        return response.status(200).json({ courses });
     }
     catch (error) {
         console.log(error);

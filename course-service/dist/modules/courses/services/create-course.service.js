@@ -15,9 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCourseService = void 0;
 const inversify_1 = require("inversify");
 const CoursesRepository_1 = require("../repositories/CoursesRepository");
+const CacheProvider_1 = require("../../../shared/containers/providers/CacheProvider/CacheProvider");
+const LoggerProvider_1 = require("../../../shared/containers/providers/LoggerProvider/LoggerProvider");
 let CreateCourseService = class CreateCourseService {
-    constructor(coursesRepository) {
+    constructor(coursesRepository, cacheProvider, loggerProvider) {
         this.coursesRepository = coursesRepository;
+        this.cacheProvider = cacheProvider;
+        this.loggerProvider = loggerProvider;
     }
     async execute({ name }) {
         try {
@@ -26,6 +30,11 @@ let CreateCourseService = class CreateCourseService {
                 throw new Error("Course name already exists");
             const course = await this.coursesRepository.create({
                 name,
+            });
+            await this.cacheProvider.invalidate('courses-list');
+            this.loggerProvider.debug({
+                type: 'debug',
+                message: `Invalidated courses-list cache`,
             });
             return course;
         }
@@ -38,6 +47,10 @@ let CreateCourseService = class CreateCourseService {
 CreateCourseService = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(CoursesRepository_1.CoursesRepository)),
-    __metadata("design:paramtypes", [CoursesRepository_1.CoursesRepository])
+    __param(1, (0, inversify_1.inject)(CacheProvider_1.CacheProvider)),
+    __param(2, (0, inversify_1.inject)(LoggerProvider_1.LoggerProvider)),
+    __metadata("design:paramtypes", [CoursesRepository_1.CoursesRepository,
+        CacheProvider_1.CacheProvider,
+        LoggerProvider_1.LoggerProvider])
 ], CreateCourseService);
 exports.CreateCourseService = CreateCourseService;

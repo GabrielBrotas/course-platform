@@ -6,9 +6,15 @@ const CoursesRepository_1 = require("../../modules/courses/repositories/CoursesR
 const StudentsRepository_1 = require("../../modules/students/repositories/StudentsRepository");
 const inversify_1 = require("inversify");
 const HashProvider_1 = require("./providers/HashProvider/HashProvider");
+const LoggerProvider_1 = require("./providers/LoggerProvider/LoggerProvider");
+const CacheProvider_1 = require("./providers/CacheProvider/CacheProvider");
+const QueueProvider_1 = require("./providers/QueueProvider/QueueProvider");
 const container = new inversify_1.Container();
 exports.container = container;
-container.bind(HashProvider_1.HashProvider).toSelf();
+container.bind(HashProvider_1.HashProvider).toSelf().inSingletonScope();
+container.bind(LoggerProvider_1.LoggerProvider).toSelf().inSingletonScope();
+container.bind(CacheProvider_1.CacheProvider).toSelf().inSingletonScope();
+container.bind(QueueProvider_1.QueueProvider).toSelf().inSingletonScope();
 container.bind(StudentsRepository_1.StudentsRepository).toSelf();
 container.bind(AdminsRepository_1.AdminsRepository).toSelf();
 container.bind(CoursesRepository_1.CoursesRepository).toSelf();

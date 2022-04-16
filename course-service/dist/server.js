@@ -10,6 +10,9 @@ const routes_2 = require("./modules/auth/routes");
 const routes_3 = require("./modules/courses/routes");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.get('/health-check', (req, res) => {
+    return res.status(200).json({ success: true });
+});
 app.use('/auth', routes_2.authRouter);
 app.use('/students', routes_1.studentsRouter);
 app.use('/courses', routes_3.coursesRouter);

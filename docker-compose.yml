@@ -31,29 +31,19 @@ services:
     networks: 
       - rabbitmq_go_net
 
-  # email_microservice:
-  #   build: ./email-microservice
-  #   container_name: email-microservice
-  #   restart: always
-  #   tty: true
-  #   volumes:
-  #     - .:/home/node/app 
-  
+  email_microservice:
+    build: ./email-microservice
+    container_name: email-microservice
+    restart: always
+    tty: true
+    environment:
+      - MAIL_HOST=smtp.mailtrap.io
+      - MAIL_USER=7d1d8c71bde4cb
+      - MAIL_PASSWORD=cae7c886c7b8da
+      - MAIL_FROM=noreply@example.com
+      - RABBIT_MQ_URL=amqp://localhost
+      
 networks:
   rabbitmq_go_net:
     driver: bridge
-  # course_svc:
-  #   build: ./course-service
-  #   container_name: course-svc
-  #   ports:
-  #     - 4000:4000
-  #   volumes:
-  #     - .:/home/node/app
-  #   environment:
-  #     - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal/course-svc
-  #     - JWT_SECRET=secret
-  #   depends_on:
-  #     - course-svc-postgres
-  #   links:
-  #     - course-svc-postgres
 

@@ -15,12 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateStudentService = void 0;
 const inversify_1 = require("inversify");
 const StudentsRepository_1 = require("../repositories/StudentsRepository");
-const HashProvider_1 = require("../../../shared/containers/providers/HashProvider/HashProvider");
 const student_1 = require("../schemas/student");
+const HashProvider_1 = require("../../../shared/containers/providers/HashProvider/HashProvider");
+const QueueProvider_1 = require("../../../shared/containers/providers/QueueProvider/QueueProvider");
 let CreateStudentService = class CreateStudentService {
-    constructor(hashProvider, studentsRepository) {
+    constructor(hashProvider, studentsRepository, queueProvider) {
         this.hashProvider = hashProvider;
         this.studentsRepository = studentsRepository;
+        this.queueProvider = queueProvider;
     }
     async execute({ email, name, password }) {
         try {
@@ -32,6 +34,14 @@ let CreateStudentService = class CreateStudentService {
                 email,
                 name,
                 password: newPassword
+            });
+            this.queueProvider.sendMessage({
+                queue_name: 'email-svc',
+                message: JSON.stringify({
+                    type: 'new-user',
+                    email,
+                    name,
+                })
             });
             return student_1.StudentOut.format(student);
         }
@@ -45,7 +55,9 @@ CreateStudentService = __decorate([
     (0, inversify_1.injectable)(),
     __param(0, (0, inversify_1.inject)(HashProvider_1.HashProvider)),
     __param(1, (0, inversify_1.inject)(StudentsRepository_1.StudentsRepository)),
+    __param(2, (0, inversify_1.inject)(QueueProvider_1.QueueProvider)),
     __metadata("design:paramtypes", [HashProvider_1.HashProvider,
-        StudentsRepository_1.StudentsRepository])
+        StudentsRepository_1.StudentsRepository,
+        QueueProvider_1.QueueProvider])
 ], CreateStudentService);
 exports.CreateStudentService = CreateStudentService;

@@ -18,24 +18,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthenticateUserService = void 0;
 const inversify_1 = require("inversify");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const constants_1 = require("../../../config/constants");
+const constants_1 = __importDefault(require("../../../config/constants"));
 const StudentsRepository_1 = require("../../students/repositories/StudentsRepository");
 const HashProvider_1 = require("../../../shared/containers/providers/HashProvider/HashProvider");
 const AdminsRepository_1 = require("../repositories/AdminsRepository");
 const student_1 = require("../../students/schemas/student");
+const LoggerProvider_1 = require("../../../shared/containers/providers/LoggerProvider/LoggerProvider");
 let AuthenticateUserService = class AuthenticateUserService {
-    constructor(hashProvider, studentsRepository, adminsRepository) {
+    constructor(hashProvider, studentsRepository, adminsRepository, loggerProvider) {
         this.hashProvider = hashProvider;
         this.studentsRepository = studentsRepository;
         this.adminsRepository = adminsRepository;
+        this.loggerProvider = loggerProvider;
     }
     async execute(email, password, isAdmin = false) {
         try {
             let user = null;
             if (isAdmin) {
+                this.loggerProvider.debug({
+                    type: 'debug',
+                    message: `AuthenticateUserService: authenticating admin with email ${email}`,
+                    payload: {
+                        email
+                    }
+                });
                 user = await this.adminsRepository.findByEmail(email);
             }
             else {
+                this.loggerProvider.debug({
+                    type: 'debug',
+                    message: `AuthenticateUserService: authenticating user with email ${email}`,
+                    payload: {
+                        email
+                    }
+                });
                 user = await this.studentsRepository.findByEmail(email);
             }
             if (!user)
@@ -43,7 +59,7 @@ let AuthenticateUserService = class AuthenticateUserService {
             const passwordMatched = await this.hashProvider.compare(password, user.password);
             if (!passwordMatched)
                 throw new Error('Invalid email / password combination');
-            const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email, roles: user.roles, isAdmin }, constants_1.JWT_SECRET, {
+            const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email, roles: user.roles, isAdmin }, constants_1.default.JWT_SECRET, {
                 expiresIn: '24h'
             });
             return {
@@ -52,6 +68,13 @@ let AuthenticateUserService = class AuthenticateUserService {
             };
         }
         catch (error) {
+            this.loggerProvider.error({
+                type: 'debug',
+                error: new Error('AuthenticateUserService: error authenticating user'),
+                payload: {
+                    email
+                }
+            });
             throw String(error.message);
         }
     }
@@ -61,8 +84,10 @@ AuthenticateUserService = __decorate([
     __param(0, (0, inversify_1.inject)(HashProvider_1.HashProvider)),
     __param(1, (0, inversify_1.inject)(StudentsRepository_1.StudentsRepository)),
     __param(2, (0, inversify_1.inject)(AdminsRepository_1.AdminsRepository)),
+    __param(3, (0, inversify_1.inject)(LoggerProvider_1.LoggerProvider)),
     __metadata("design:paramtypes", [HashProvider_1.HashProvider,
         StudentsRepository_1.StudentsRepository,
-        AdminsRepository_1.AdminsRepository])
+        AdminsRepository_1.AdminsRepository,
+        LoggerProvider_1.LoggerProvider])
 ], AuthenticateUserService);
 exports.AuthenticateUserService = AuthenticateUserService;
