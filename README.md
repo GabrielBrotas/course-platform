@@ -23,8 +23,7 @@
 ## How to run
 **Local Environment**
 ```bash
-  chmod +x ./*.sh
-  ./deploy.sh
+  docker-compose up -d --build
 ```
 
 ## Clean Up

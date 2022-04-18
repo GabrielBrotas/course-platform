@@ -6,7 +6,7 @@ RUN npm i -g @nestjs/cli@7.4.1
 
 # USER node
 
-WORKDIR /email-template
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 

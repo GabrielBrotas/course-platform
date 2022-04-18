@@ -1,16 +1,21 @@
-version: '3.2'
+version: '3'
 
 services:
-  course-svc-postgres:
-    container_name: course-svc-postgres
+  postgres:
+    container_name: postgres
     image: postgres:14.2-alpine
     restart: always
+    tty: true 
     ports:
       - '5432:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=course-svc
+    volumes:
+      - ./docker/db:/var/lib/postgresql/data
+    networks:
+      - postgres_network
 
   redis:
     image: redis
@@ -26,14 +31,17 @@ services:
       - 5672:5672
       - 15672:15672
     volumes:
-      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
-      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+      - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./docker/rabbitmq/log/:/var/log/rabbitmq
     networks: 
       - rabbitmq_go_net
 
   email_microservice:
-    build: ./email-microservice
-    container_name: email-microservice
+    build:
+      context: ./email-microservice
+      dockerfile: ./Dockerfile
+    image: gbrotas/email-svc
+    container_name: email-svc
     restart: always
     tty: true
     environment:
@@ -42,8 +50,27 @@ services:
       - MAIL_PASSWORD=cae7c886c7b8da
       - MAIL_FROM=noreply@example.com
       - RABBIT_MQ_URL=amqp://localhost
+    
+  course_service:
+    build:
+      context: ./course-service
+      dockerfile: ./Dockerfile
+    image: gbrotas/course-svc
+    container_name: course-svc
+    ports:
+      - "4000:4000"
+    tty: true
+    networks:
+      - postgres_network
+    depends_on:
+      - postgres
+    command: sh -c "dockerize -wait tcp://postgres:5432 -timeout 20s -wait-retry-interval 3s /entrypoint.sh"
       
 networks:
+  postgres_network:
+    driver: bridge
+
   rabbitmq_go_net:
     driver: bridge
+  
 
