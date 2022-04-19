@@ -4,15 +4,15 @@
   This project was created to train some microservices and backend skills
   
   What you will see:
-    - Dependency Injection / Inversion of Control
-    - Cache (Redis)
-    - Queue (RabbitMQ)
-    - Send Email
-    - Microservices Communication
-    - Containarized Application
-    - Authentication
-    - ORM to manipulate the database
-    - Domain Driven Design
+  - Dependency Injection / Inversion of Control
+  - Cache (Redis)
+  - Queue (RabbitMQ)
+  - Send Email
+  - Microservices Communication
+  - Containarized Application
+  - Authentication
+  - ORM to manipulate the database
+  - Domain Driven Design
 
 ## Requirements
  - node v16.x
